@@ -1,0 +1,10 @@
+---
+
+- name: install postfix
+  apt: name=postfix state=latest
+
+- name: copy postfix main.cf
+  file: src=main.cf dest=/etc/postfix/main.cf
+
+- name: install dovecot imap
+  apt: name=dovecot-imapd state=latest

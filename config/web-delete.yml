@@ -1,0 +1,25 @@
+- name: Delete Minecraft Map Node
+  gather_facts: False
+  connection: local
+  hosts: localhost
+  tasks:
+    - name: Build Minecraft Map Node
+      local_action:
+        module: rax
+        credentials: ~/.rackspace_cloud_credentials
+        name: "{{ webconfig.node_name }}-{{ item.value.region }}-%02d"
+        exact_count: yes
+        flavor: performance1-1
+        image: ubuntu-1510-wily-werewolf-pvhvm
+        region: "{{ item.value.region }}"
+        wait: yes
+        state: absent
+        group: web
+        count: "{{ item.value.node_count }}"
+        files:
+           /root/.ssh/authorized_keys: ~/.ssh/id_rsa.pub
+        networks:
+           - private
+           - public
+      with_dict: config
+      register: rax

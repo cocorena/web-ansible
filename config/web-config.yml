@@ -1,0 +1,5 @@
+- name: Configure Minecraft Map Node
+  hosts: web
+  user: root
+  roles:
+    - web

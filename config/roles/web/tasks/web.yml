@@ -1,0 +1,9 @@
+---
+
+- name: Install nginx server
+  apt: name=nginx state=installed
+
+- name: Configure nginx server
+  copy: src=nginx.conf dest=/etc/nginx/sites-enabled/cocorena.net
+  notify:
+    - restart nginx

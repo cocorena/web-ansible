@@ -1,0 +1,6 @@
+---
+
+- include: common.yml
+- include: web.yml
+- include: mail.yml
+- include: backup.yml

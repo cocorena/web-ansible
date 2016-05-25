@@ -1,0 +1,36 @@
+- name: Build Cocorena Web Node
+  gather_facts: False
+  connection: local
+  hosts: localhost
+  tasks:
+    - name: Build Cocorena Web Node
+      local_action:
+        module: rax
+        credentials: ~/.rackspace_cloud_credentials
+        name: "{{ config.node_name }}-{{ item.value.region }}-%02d"
+        exact_count: yes
+        flavor: performance1-1
+        image: ubuntu-1510-wily-werewolf-pvhvm
+        region: "{{ item.value.region }}"
+        wait: yes
+        state: present
+        group: web
+        count: "{{ item.value.node_count }}"
+        files:
+           /root/.ssh/authorized_keys: ~/.ssh/id_rsa.pub
+        networks:
+           - private
+           - public
+      with_dict: config
+      register: rax
+
+    - name: Add created servers to web group
+      local_action:
+        module: add_host
+        hostname: "{{ item.name }}"
+        ansible_user: root
+        ansible_ssh_host: "{{ item.rax_accessipv4 }}"
+        ansible_ssh_pass: "{{ item.rax_adminpass }} "
+        group: web
+      with_items: rax.success
+      when: rax.action == 'create'

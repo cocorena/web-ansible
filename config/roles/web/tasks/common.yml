@@ -1,0 +1,24 @@
+---
+- name: Apt-get Update
+  apt: update_cache=yes upgrade=dist
+
+- name: Install curl
+  apt: name=curl state=installed
+
+- name: Install Vim
+  apt: name=vim state=installed
+
+- name: Configure Vim as default
+  shell: update-alternatives --set editor /usr/bin/vim.basic
+
+- name: copy firewall config
+  template: src=ufw.j2 dest=/root/ufw.sh
+
+- name: set permissions for firewall script
+  file: path=/root/ufw.sh owner=root group=root mode=0777
+
+- name: run firewall config
+  command: /root/ufw.sh
+
+- name: delete firewall script
+  file: path=/root/ufw.sh state=absent
