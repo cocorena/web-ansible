@@ -7,7 +7,7 @@
       local_action:
         module: rax
         credentials: ~/.rackspace_cloud_credentials
-        name: "{{ config.node_name }}-{{ item.value.region }}-%02d"
+        name: "{{ config.node_name }}-{{ config.region }}-%02d"
         exact_count: yes
         flavor: performance1-1
         image: ubuntu-1510-wily-werewolf-pvhvm
@@ -15,7 +15,7 @@
         wait: yes
         state: present
         group: web
-        count: "{{ item.value.node_count }}"
+        count: "{{ config.node_count }}"
         files:
            /root/.ssh/authorized_keys: ~/.ssh/id_rsa.pub
         networks:
